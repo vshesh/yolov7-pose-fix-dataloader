@@ -35,8 +35,6 @@ for orientation in ExifTags.TAGS.keys():
     if ExifTags.TAGS[orientation] == 'Orientation':
         break
 
-NKPT = 12
-
 
 def get_hash(files):
     # Returns a single hash value of a list of files
@@ -598,7 +596,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                                                  scale=hyp['scale'],
                                                  shear=hyp['shear'],
                                                  perspective=hyp['perspective'],
-                                                 kpt_label=self.kpt_label)
+                                                 kpt_label=self.kpt_label,
+                                                 nkpt=self.nkpt)
 
             # Augment colorspace
             augment_hsv(img, hgain=hyp['hsv_h'], sgain=hyp['hsv_s'], vgain=hyp['hsv_v'])
@@ -782,7 +781,8 @@ def load_mosaic(self, index):
                                        shear=self.hyp['shear'],
                                        perspective=self.hyp['perspective'],
                                        border=self.mosaic_border,
-                                       kpt_label=self.kpt_label)  # border to remove
+                                       kpt_label=self.kpt_label,
+                                       nkpt=self.nkpt)  # border to remove
 
     return img4, labels4
 
@@ -857,7 +857,8 @@ def load_mosaic9(self, index):
                                        shear=self.hyp['shear'],
                                        perspective=self.hyp['perspective'],
                                        border=self.mosaic_border,
-                                       kpt_label=self.kpt_label)  # border to remove
+                                       kpt_label=self.kpt_label,
+                                       nkpt=self.nkpt)  # border to remove
 
     return img9, labels9
 
@@ -913,7 +914,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
 
 
 def random_perspective(img, targets=(), segments=(), degrees=10, translate=.1, scale=.1, shear=10, perspective=0.0,
-                       border=(0, 0), kpt_label=False, nkpt=NKPT):
+                       border=(0, 0), kpt_label=False, nkpt=-1):
     # torchvision.transforms.RandomAffine(degrees=(-10, 10), translate=(.1, .1), scale=(.9, 1.1), shear=(-10, 10))
     # targets = [cls, xyxy]
 
